@@ -136,6 +136,7 @@ public class ClienteDAO implements GenericDAO<Cliente> {
 			return false;
 		}
 	}
+
 	private Cliente mapearFila(ResultSet rs) throws SQLException {
 		Cliente a = new Cliente();
 		a.setId_cliente(rs.getInt("id_cliente"));
