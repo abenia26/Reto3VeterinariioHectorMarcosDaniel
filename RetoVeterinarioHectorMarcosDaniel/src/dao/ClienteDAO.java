@@ -15,17 +15,7 @@ public class ClienteDAO implements GenericDAO<Cliente> {
 
 	@Override
 	public boolean insertar(Cliente cliente) {
-<<<<<<< HEAD
-
-	
-		
-		
 		String sql ="INSERT INTO clientes (id_persona,telefono) VALUES (?, ?)"; 
-
-=======
-		String sql = "INSERT INTO clientes (id_persona,telefono) VALUES (?, ?)";
->>>>>>> branch 'main' of https://github.com/abenia26/Reto3VeterinariioHectorMarcosDaniel.git
-
 		try (Connection conn = ConexionBD.getConnection();
 				PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
