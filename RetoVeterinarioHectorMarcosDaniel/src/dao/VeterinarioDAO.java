@@ -123,7 +123,7 @@ public class VeterinarioDAO implements GenericDAO<Veterinario> {
 
 		} catch (SQLException e) {
 			System.err.println("Error SQL al actualizar ID " + veterinario.getId_veterinario() + ": " + e.getMessage());
-			return false;
+			return false; 
 		}
 	}
 
