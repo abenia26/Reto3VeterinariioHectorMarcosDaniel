@@ -3,6 +3,7 @@ package dao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
 
 import modelo.Tratamiento;
@@ -40,21 +41,5 @@ public class TratamientoDAO implements GenericDAO<Tratamiento> {
 		return false;
 	}
 
-	public Tratamiento obtenerPorIdVeterinario(int id) { 
 
-		String sql = "select t.* from tratamientos t inner join historial h on  t.id_tratamiento=h.id_tratamiento  inner join veterinarios v on h.id_veterinario=v.id_veterinario where v.id_veterinario=?";
-
-		try (Connection con = ConexionBD.getConnection();
-				PreparedStatement ps = con.prepareStatement(sql);
-				ResultSet rs = ps.executeQuery()) {
-
-			while (rs.next()) {
-				System.out.println(rs.getString(1) + ": " + rs.getInt(2));
-			}
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
 }
