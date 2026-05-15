@@ -1,283 +1,60 @@
-package dao;
+package app;
 
+import java.util.Scanner;
 
-
-import java.sql.Connection;
-
-import java.sql.PreparedStatement;
-
-import java.sql.ResultSet;
-
-import java.sql.SQLException;
-
-import java.sql.Statement;
-
-import java.util.ArrayList;
-
-import java.util.List;
-
-
-
+import dao.ClienteDAO;
+import dao.HistorialDAO;
+import dao.MascotaDAO;
 import modelo.Cliente;
+import modelo.Historial;
+import modelo.Mascota;
 
-import util.ConexionBD;
+public class Main {
 
+	public static void main(String[] args) {
+		Scanner sc = new Scanner(System.in);
 
-
-public class ClienteDAO implements GenericDAO<Cliente> {
-
-
-
-	@Override
-
-	public boolean insertar(Cliente cliente) {
-
-		String sql2 = "INSERT INTO personas (dni,nombre) VALUES (?, ?)";
-
-		String sql = "INSERT INTO clientes (id_persona,telefono) VALUES (?, ?)";
+		ClienteDAO cliDAO = new ClienteDAO();
+		MascotaDAO masDAO = new MascotaDAO();
+		HistorialDAO hisDAO = new HistorialDAO();
 
 
+		System.out.println("Todos los clientes:");
+		for (Cliente c : cliDAO.obtenerTodos()) {
+			System.out.println(c);
+		}
 
-		try (Connection conn = ConexionBD.getConnection();
+		System.out.println();
+		System.out.println("Selecciona un id cliente de los mostrados:");
+		int idCliente = Integer.parseInt(sc.nextLine());
 
-				PreparedStatement pstmt = conn.prepareStatement(sql2, Statement.RETURN_GENERATED_KEYS)) {
-
-
-
-			pstmt.setString(1, cliente.getDni());
-
-			pstmt.setString(2, cliente.getNombre());
-
-
-
-			int filas = pstmt.executeUpdate();
-
-
-
-			if (filas > 0) {
-
-				try (ResultSet rs = pstmt.getGeneratedKeys()) {
-
-					if (rs.next()) {
-
-						cliente.setId_persona(rs.getInt(1)); // asigna el ID
-
-					}
-
-				}
-
+		System.out.println();
+		System.out.println("Mascotas del cliente " + idCliente);
+		for (Mascota m : masDAO.obtenerTodos()) {
+			if (m.getId_cliente() == idCliente) {
+				System.out.println(m);
 			}
+		}
 
+		System.out.println();
+		System.out.println("Todas las mascotas:");
+		for (Mascota m : masDAO.obtenerTodos()) {
+			System.out.println(m);
+		}
 
+		System.out.println();
+		System.out.println("Selecciona un id mascota de los mostrados:");
+		int idMascota = Integer.parseInt(sc.nextLine());
 
-			try (PreparedStatement pstmt1 = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-
-
-
-				pstmt.setInt(1, cliente.getId_persona());
-
-				pstmt.setString(2, cliente.getTelefono());
-
-
-
-				int filass = pstmt.executeUpdate();
-
-
-
-				if (filass > 0) {
-
-					try (ResultSet rs = pstmt.getGeneratedKeys()) {
-
-						if (rs.next()) {
-
-							cliente.setId_cliente(rs.getInt(1)); // asigna el ID
-
-							return true;
-
-						}
-
-					}
-
-				}
-
-				return false; 
-
+		System.out.println();
+		System.out.println("Historial de la mascota " + idMascota + ":");
+		for (Historial h : hisDAO.obtenerTodos()) {
+			if (h.getId_mascota() == idMascota) {
+				System.out.println(h);
 			}
-
-		} catch (SQLException e) {
-
-			System.err.println("Error SQL al insertar '" + cliente.getId_cliente() + "': " + e.getMessage());
-
-			return false;
-
 		}
 
-
-
+		sc.close();
 	}
-
-
-
-	@Override
-
-	public List<Cliente> obtenerTodos() {
-
-		List<Cliente> clientes = new ArrayList<>();
-
-		String sql = "SELECT id_cliente,id_persona,telefono FROM clientes ORDER BY id_cliente";
-
-
-
-		try (Connection conn = ConexionBD.getConnection();
-
-				PreparedStatement pstmt = conn.prepareStatement(sql);
-
-				ResultSet rs = pstmt.executeQuery()) {
-
-
-
-			while (rs.next()) {
-
-				clientes.add(mapearFila(rs));
-
-			}
-
-
-
-		} catch (SQLException e) {
-
-			System.err.println("Error SQL al obtener todos los clientes: " + e.getMessage());
-
-		}
-
-		return clientes;
-
-	}
-
-
-
-	@Override
-
-	public Cliente obtenerPorId(int id) {
-
-		String sql = "SELECT id_cliente,id_persona,telefono FROM clientes WHERE id = ?";
-
-
-
-		try (Connection conn = ConexionBD.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
-
-
-
-			pstmt.setInt(1, id);
-
-
-
-			try (ResultSet rs = pstmt.executeQuery()) {
-
-				if (rs.next()) {
-
-					return mapearFila(rs);
-
-				}
-
-			}
-
-
-
-		} catch (SQLException e) {
-
-			System.err.println("Error SQL al buscar ID " + id + ": " + e.getMessage());
-
-		}
-
-		return null; //
-
-	}
-
-
-
-	@Override
-
-	public boolean actualizar(Cliente cliente) {
-
-		String sql = "UPDATE clientes SET id_persona=?, telefono=? WHERE id=?";
-
-
-
-		try (Connection conn = ConexionBD.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
-
-
-
-			pstmt.setInt(1, cliente.getId_persona());
-
-			pstmt.setString(2, cliente.getTelefono());
-
-
-
-			int filas = pstmt.executeUpdate();
-
-			return filas > 0; // false si el ID no existía en la BD
-
-
-
-		} catch (SQLException e) {  
-
-			System.err.println("Error SQL al actualizar ID " + cliente.getId_cliente() + ": " + e.getMessage());
-
-			return false;
-
-		}
-
-	}
-
-
-
-	@Override
-
-	public boolean eliminar(int id) {
-
-		String sql = "DELETE FROM clientes WHERE id=?";
-
-
-
-		try (Connection conn = ConexionBD.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
-
-
-
-			pstmt.setInt(1, id);
-
-			int filas = pstmt.executeUpdate();
-
-			return filas > 0; // false si el ID no existía
-
-
-
-		} catch (SQLException e) {
-
-			System.err.println("Error SQL al eliminar ID " + id + ": " + e.getMessage());
-
-			return false;
-
-		}
-
-	}
-
-
-
-	private Cliente mapearFila(ResultSet rs) throws SQLException {
-
-		Cliente a = new Cliente();
-
-		a.setId_cliente(rs.getInt("id_cliente"));
-
-		a.setId_persona(rs.getInt("id_persona"));
-
-		a.setTelefono(rs.getString("telefono"));
-
-		return a;
-
-	}
-
-
 
 }
