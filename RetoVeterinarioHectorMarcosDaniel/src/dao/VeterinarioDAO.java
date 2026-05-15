@@ -130,7 +130,7 @@ public class VeterinarioDAO implements GenericDAO<Veterinario> {
 	@Override
 	public boolean eliminar(int id) {
 		String sql = "DELETE FROM veterinarios WHERE id=?";
-
+ 
 
 		try (Connection conn = ConexionBD.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
 

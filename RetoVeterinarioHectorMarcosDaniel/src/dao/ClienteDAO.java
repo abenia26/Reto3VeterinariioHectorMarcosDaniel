@@ -16,6 +16,35 @@ public class ClienteDAO implements GenericDAO<Cliente> {
 
 	@Override
 	public boolean insertar(Cliente cliente) {
+
+		String sql2 ="INSERT INTO personas (id_persona,telefono) VALUES (?, ?)"; 
+
+
+		try (Connection connn = ConexionBD.getConnection();
+		PreparedStatement pstmtt = connn.prepareStatement(sql2,Statement.RETURN_GENERATED_KEYS)) {
+
+
+		
+			pstmtt.setInt(1, cliente.getId_persona());
+			pstmtt.setString(2, cliente.getTelefono());
+		
+
+
+			int filas = pstmtt.executeUpdate();
+
+
+			if (filas > 0) {
+				try (ResultSet rs = pstmtt.getGeneratedKeys()) {
+					if (rs.next()) {
+					cliente.setId_cliente(rs.getInt(1)); // asigna el ID
+						return true;
+					}
+				}
+			}
+		}
+		
+		
+		
 		String sql ="INSERT INTO clientes (id_persona,telefono) VALUES (?, ?)"; 
 
 
@@ -47,6 +76,7 @@ public class ClienteDAO implements GenericDAO<Cliente> {
 			System.err.println("Error SQL al insertar '" + cliente.getId_cliente() + "': " + e.getMessage());
 			return false;
 		}
+			
 	}
 
 	@Override
