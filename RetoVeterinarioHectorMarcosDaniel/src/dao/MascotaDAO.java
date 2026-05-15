@@ -101,7 +101,7 @@ public class MascotaDAO implements GenericDAO<Mascota> {
 	private Mascota mapearFila(ResultSet rs) throws SQLException {
 		Mascota a = new Mascota();
 		a.setId_mascota(rs.getInt("id_mascota"));
-		a.setEspecie(rs.getString("id_especie"));
+		a.setEspecie(rs.getString("especie"));
 		a.setFecha_nacimiento(rs.getObject("fecha_nacimiento", LocalDate.class));
 		a.setNombre(rs.getString("nombre"));
 		a.setPeso(rs.getDouble("peso"));

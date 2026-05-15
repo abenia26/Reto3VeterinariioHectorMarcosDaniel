@@ -109,7 +109,7 @@ public class HistorialDAO implements GenericDAO<Historial> {
 		Historial h = new Historial();
 		h.setId_tratamiento(rs.getInt("id_tratamiento"));
 		h.setId_mascota(rs.getInt("id_mascota"));
-		h.setFecha(rs.getObject("id_fecha", LocalDate.class));
+		h.setFecha(rs.getObject("fecha", LocalDate.class));
 		h.setId_veterinario(rs.getInt("id_veterinario"));
 		return h;
 	}
