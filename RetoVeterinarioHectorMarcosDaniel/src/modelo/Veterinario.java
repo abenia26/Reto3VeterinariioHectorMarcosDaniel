@@ -23,10 +23,13 @@ public class Veterinario extends Persona {
 		super(id_persona, dni, nombre);
 	}
 
+<<<<<<< HEAD
 	public Veterinario() {
 		super();
 	}
 
+=======
+>>>>>>> branch 'main' of https://github.com/abenia26/Reto3VeterinariioHectorMarcosDaniel.git
 	public int getId_veterinario() {
 		return id_veterinario;
 	}

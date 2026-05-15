@@ -119,7 +119,7 @@ public class VeterinarioDAO implements GenericDAO<Veterinario> {
 
 			int filas = pstmt.executeUpdate();
 			return filas > 0; // false si el ID no existía en la BD
-
+ 
 
 		} catch (SQLException e) {
 			System.err.println("Error SQL al actualizar ID " + veterinario.getId_veterinario() + ": " + e.getMessage());
